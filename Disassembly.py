@@ -22,3 +22,7 @@ for line in fileIn:
 
     if instruction[0] == "beq" or instruction[0] == "bne":
         decode_I(instruction[1], instruction[2], instruction[3])
+
+
+fileIn.close()
+fileOut.close()
