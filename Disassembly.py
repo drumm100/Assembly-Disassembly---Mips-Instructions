@@ -15,7 +15,8 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
 
 
 
-def decode_r(ins, rd, rs, rt):
+def decode_r(ins, rd, rs, rt): # precisa colocar com os tamanhos de bits certinhos, ins = 6 bits; rs,rt,rd,shamt = 6 bits e etc
+    shamt = 0
     instruction = int( bin(type_r[ins]).replace('0b','') )
     print(instruction)
     reg1 = int( bin(register.index(rs)).replace('0b','') )
@@ -26,7 +27,7 @@ def decode_r(ins, rd, rs, rt):
     print(reg3)
     fun = int( hex(functions[ins]).replace('0x','') )
     print(fun)
-    out = hex(instruction + reg1 + reg2 + reg3 + fun)
+    out = hex(instruction + reg1 + reg2 + reg3 + shamt + fun)
     print(out)
 
 def decode_i(rt, rs, im):
