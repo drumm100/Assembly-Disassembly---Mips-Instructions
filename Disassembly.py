@@ -3,7 +3,7 @@
 fileIn = open("teste.asm", "r")
 fileOut = open("teste.txt", "w")
 
-functions = {'sub':34, 'or':37} # Codigo de cada funcao na ULA
+functions = {'sub':34, 'or':37, 'addu':33} # Codigo de cada funcao na ULA
 type_r = { 'addu':0, 'addiu':0 , 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
 type_i = ["xori", "lui", "sltiu", "andi", "beq", "bne"] # Instrucoes do tipo I
 type_j = ["j"] #Instrucoes do tipo J
