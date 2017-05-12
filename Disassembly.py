@@ -19,16 +19,25 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0", # r
 def decode_r(ins, rd, rs, rt):
     shamt = '0'
 
-
-
     instruction = bin(type_r[ins])[2:].zfill(6)
-    reg1 = bin(register.index(rs))[2:].zfill(5)
-    reg2 = bin(register.index(rt))[2:].zfill(5)
-    reg3 = bin(register.index(rd))[2:].zfill(5)
-    shamt = bin( int(shamt.zfill(6)) )[2:].zfill(5)
-    fun = bin(functions[ins])[2:].zfill(6)
 
-    outBin = instruction + reg1 + reg2 + reg3 + shamt + fun
+    if ins == "sll":
+        out_rs = '00000'
+        shamt = bin(int(rt))[2:].zfill(5)
+        fun = '000000'
+        out_rt = bin(register.index(rs))[2:].zfill(5)
+
+    else:
+        out_rs = bin(register.index(rs))[2:].zfill(5)
+        shamt = bin(int(shamt.zfill(6)))[2:].zfill(5)
+        fun = bin(functions[ins])[2:].zfill(6)
+        out_rt = bin(register.index(rt))[2:].zfill(5)
+
+
+    out_rd = bin(register.index(rd))[2:].zfill(5)
+
+
+    outBin = instruction + out_rs + out_rt + out_rd + shamt + fun
     output = "0x"
 
     for i in range(0, len(outBin) - 3, 4 ):
