@@ -3,7 +3,7 @@
 fileIn = open("teste.asm", "r")
 fileOut = open("teste.txt", "w")
 
-functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2  } # Codigo de cada funcao na ULA
+functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2 } # Codigo de cada funcao na ULA
 #imm funcions: addiu, xori, lui, sltiu, andi,   
 #offset: beq, bne, lw, sw
 #target: j
@@ -26,7 +26,7 @@ def decode_r(ins, rd, rs, rt):
     if ins == "sll" or ins == "srl":
         out_rs = '00000'
         shamt = bin(int(rt))[2:].zfill(5)
-        fun = '000000'
+        fun = bin(functions[ins])[2:].zfill(6)
         out_rt = bin(register.index(rs))[2:].zfill(5)
 
     else:
@@ -40,13 +40,17 @@ def decode_r(ins, rd, rs, rt):
 
 
     outBin = instruction + out_rs + out_rt + out_rd + shamt + fun
+    #print(outBin)
     output = "0x"
 
     for i in range(0, len(outBin) - 3, 4 ):
         aux = outBin[i : i+4]
+        #print(aux)
         aux = int(aux, 2)
         aux = hex(aux)[2:]
+        #print(aux)
         output = output + aux
+        #print(aux)
 
     fileOut.write(output+'\n')
 
