@@ -7,8 +7,8 @@ functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2
 #imm funcions: addiu, xori, lui, sltiu, andi,   
 #offset: beq, bne, lw, sw
 #target: j
-type_r = { 'addu':0, 'addiu':9 , 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
-type_i = {"xori":14, "lui":15, "sltiu":11, "andi":12, "beq":4, "bne":5 } # Instrucoes do tipo I
+type_r = { 'addu':0, 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
+type_i = {'addiu':9, "xori":14, "lui":15, "sltiu":11, "andi":12, "beq":4, "bne":5 } # Instrucoes do tipo I
 type_j = {"j":2} #Instrucoes do tipo J
 type_i_special = {"lw":35, "sw":43} # Instrucoes especiais
 
@@ -24,7 +24,7 @@ def decode_r(ins, rd, rs, rt):
 
     instruction = bin(type_r[ins])[2:].zfill(6)
 
-    if ins == "sll":
+    if ins == "sll" or ins == "srl":
         out_rs = '00000'
         shamt = bin(int(rt))[2:].zfill(5)
         fun = '000000'
