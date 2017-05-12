@@ -3,11 +3,14 @@
 fileIn = open("teste.asm", "r")
 fileOut = open("teste.txt", "w")
 
-functions = {'sub':34, 'or':37, 'addu':33} # Codigo de cada funcao na ULA
-type_r = { 'addu':0, 'addiu':0 , 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
-type_i = ["xori", "lui", "sltiu", "andi", "beq", "bne"] # Instrucoes do tipo I
-type_j = ["j"] #Instrucoes do tipo J
-type_i_special = ["lw", "sw"] # Instrucoes especiais
+functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2  } # Codigo de cada funcao na ULA
+#imm funcions: addiu, xori, lui, sltiu, andi,   
+#offset: beq, bne, lw, sw
+#target: j
+type_r = { 'addu':0, 'addiu':9 , 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
+type_i = ["xori":14, "lui":15, "sltiu":11, "andi":12, "beq":4, "bne":5] # Instrucoes do tipo I
+type_j = ["j":2] #Instrucoes do tipo J
+type_i_special = ["lw":35, "sw":43] # Instrucoes especiais
 
 register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0", # registradores do MIPS
             "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$s0", "$s1",
