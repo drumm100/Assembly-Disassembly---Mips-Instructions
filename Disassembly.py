@@ -8,9 +8,8 @@ functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2
 #offset: beq, bne, lw, sw
 #target: j
 type_r = { 'addu':0, 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
-type_i = {'addiu':9, "xori":14, "lui":15, "sltiu":11, "andi":12, "beq":4, "bne":5 } # Instrucoes do tipo I
+type_i = {'addiu':9, "xori":14, "lui":15, "sltiu":11, "andi":12, "beq":4, "bne":5, "lw":35, "sw":43} # Instrucoes do tipo I
 type_j = {"j":2} #Instrucoes do tipo J
-type_i_special = {"lw":35, "sw":43} # Instrucoes especiais
 
 register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0", # registradores do MIPS
             "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$s0", "$s1",
@@ -60,9 +59,8 @@ for line in fileIn:
     if line != '\n':
         instruction = line.split()
 
-        for i in range(0, len(instruction)):  # elimina as virgulas e espacos dos elementos do array
+        for i in range(0, len(instruction)):  # elimina as virgulas dos elementos do array
             instruction[i] = instruction[i].strip(",")
-            #instruction[i] = instruction[i].strip(" ")
 
         if instruction[0] in type_r:
             decode_r(instruction[0], instruction[1], instruction[2], instruction[3])
