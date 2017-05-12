@@ -324,6 +324,14 @@
       <option name="presentableId" value="Default" />
       <updated>1494457699272</updated>
     </task>
+    <task id="LOCAL-00001" summary="Funcao docde_r parcialmente pronto, falta o caso com shift">
+      <created>1494534833265</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1494534833265</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TodoView">
@@ -376,6 +384,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Funcao docde_r parcialmente pronto, falta o caso com shift" />
+    <option name="LAST_COMMIT_MESSAGE" value="Funcao docde_r parcialmente pronto, falta o caso com shift" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
