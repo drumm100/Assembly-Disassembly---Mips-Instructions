@@ -8,13 +8,28 @@ functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2
 #offset: beq, bne, lw, sw
 #target: j
 type_r = { 'addu':0, 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
-type_i = {'addiu':9, "xori":14, "lui":15, "sltiu":11, "andi":12, "beq":4, "bne":5, "lw":35, "sw":43} # Instrucoes do tipo I
+type_i = {'addiu':9, "xori":14, "lui":15, "sltiu":11, "andi":12, "lw":35, "sw":43} # Instrucoes do tipo I
+type_i_branch = {"bne":5, "beq":4}
 type_j = {"j":2} #Instrucoes do tipo J
 
 register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$s0", "$s1",
             "$s2", "$s3", "$s4", "$s5","$s6", "$s7", "$t8", "$t9", "$k0",
             "$k1", "$gp", "$sp", "$fp", "$ra"]
+
+# def find_label(label, line):
+#     # text = fileIn.readlines()
+#     #
+#     # for i in range(0 - line, len(text) ):
+#     #     if label in text[i]: return i
+#
+#     it = line*(-1)
+#     while 1:
+#         lines = fileIn.readlines(it)
+#         if lines != '\n':
+#             if label in lines: return it
+#             it += 1
+
 
 
 
@@ -56,16 +71,41 @@ def decode_r(ins, rd, rs, rt):
 
 
 def decode_i(ins, r1, r2, im, line):
-
+    return 0
     # addiu r1, r2, im | opcode(6) ; r2 ; r1 ; imm(16)
     # xori r1, r2, imm | opcode(6) ; r2 ; r1 ; imm(16)
     # lui r1, r2       | opcode(6) ; 0 ; r1 ; r2(16)       --- caso especial
     # sltiu r1, r2, imm | opcode(6) ; r2 ; r1 ; im(16)
     # andi r1, r2, imm | opcode(6) ; r2 ; r1 ; im(16)
-    # beq r1, r2, imm  | opcode(6) ; r1 ; r2 ; imm(16)
-    # bne r1, r2, imm  | opcode(6) ; r1 ; r2 ; imm(16)
     # lw r1, imm       | opcode(6) ; r1 ; r2 ; imm(16)    --- caso especial
     # sw r1, imm       | opcode(6) ; r1 ; r2 ; imm(16)    --- caso especial
+
+
+# def decode_branch(ins, rs, rt, label, line):
+#     #return 0
+#     instruction = bin(type_i_branch[ins])[2:].zfill(6)
+#     out_rs = bin(register.index(rs))[2:].zfill(5)
+#     out_rt = bin(register.index(rt))[2:].zfill(5)
+#
+#     findLine = find_label(label+":", line)
+#
+#     offset = bin( 4 * (findLine - (line + 1) ) )[2:].zfill(16)
+#
+#     outBin = instruction + out_rs + out_rt + offset
+#     #print(outBin)
+#     output = "0x"
+#
+#     for i in range(0, len(outBin) - 3, 4 ):
+#         aux = outBin[i : i+4]
+#         #print(aux)
+#         aux = int(aux, 2)
+#         aux = hex(aux)[2:]
+#         #print(aux)
+#         output = output + aux
+#         #print(aux)
+#
+#     fileOut.write(output+'\n')
+
 
 
 lineNumber = 1
@@ -83,7 +123,12 @@ for line in fileIn:
         if instruction[0] in type_i:
             decode_i(instruction[0], instruction[1], instruction[2], instruction[3], lineNumber)
 
-    lineNumber += 1
+        #if instruction[0] in type_i_branch:
+            #decode_branch( instruction[0], instruction[1], instruction[2], instruction[3], lineNumber )
+
+        lineNumber += 1
+
+
 
 fileIn.close()
 fileOut.close()

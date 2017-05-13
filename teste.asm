@@ -2,9 +2,7 @@
  .globl  main
 
  main:
-
-
-
+ 	beq $t1, $t3, loop
 	sub $t1, $s3, $s4
 	or $t0, $t1, $t2
 	sll $t1, $t2, 4
@@ -12,3 +10,7 @@
 	addu $t1, $t2, $s3
 	subu $t7, $t6, $t4
 	srl $t0, $t1, 4
+	srl $t0, $t1, 4
+loop:
+	sub $t1, $s3, $s4
+	or $t0, $t1, $t2
