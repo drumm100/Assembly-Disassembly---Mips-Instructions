@@ -17,7 +17,10 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$s2", "$s3", "$s4", "$s5","$s6", "$s7", "$t8", "$t9", "$k0",
             "$k1", "$gp", "$sp", "$fp", "$ra"]
 
-
+def two_complement(x, bits):
+    if (x & (1 << (bits - 1))) != 0:
+        x = x - (1 << bits)
+    return x
 
 def find_label(label, currentLine):
     none_ins = 0
@@ -28,7 +31,9 @@ def find_label(label, currentLine):
 
             if label in instruction[0]:
                 none_ins -= 1
-                return file.index(i) - currentLine - 1 - none_ins
+                out = file.index(i) - currentLine - none_ins
+                if out < 0: return out -1
+                return out
 
 
 def decode_r(ins, rd, rs, rt):
@@ -68,9 +73,19 @@ def decode_r(ins, rd, rs, rt):
     fileOut.write(output+'\n')
 
 
-# def decode_i(ins, r1, r2, im, line):
+def decode_i(ins, r1, r2, im, line):
+    if ins == "addiu" or ins == "xori" or ins == "sltiu" or ins == "andi":
+        instruction = bin(type_r[ins])[2:].zfill(6)
+
+        out_r2 = bin(register.index(r2))[2:].zfill(5)
+        out_r1 = bin(register.index(r1))[2:].zfill(5)
+        imm =
+
+        outBin = instruction + out_r2 + out_r1 + imm
+
+
     # addiu r1, r2, im | opcode(6) ; r2 ; r1 ; imm(16)
-    # xori r1, r2, imm | opcode(6) ; r2 ; r1 ; imm(16)
+    # xori r1, r2, im  | opcode(6) ; r2 ; r1 ; imm(16)
     # lui r1, r2       | opcode(6) ; 0 ; r1 ; r2(16)       --- caso especial
     # sltiu r1, r2, imm | opcode(6) ; r2 ; r1 ; im(16)
     # andi r1, r2, imm | opcode(6) ; r2 ; r1 ; im(16)
@@ -79,16 +94,41 @@ def decode_r(ins, rd, rs, rt):
 
 
 def decode_branch(ins, rs, rt, label, line):
-    print(line)
-    print(find_label(label, line))
+    #print(line)
+    #print(find_label(label, line))
 
     instruction = bin(type_i_branch[ins])[2:].zfill(6)
     out_rs = bin(register.index(rs))[2:].zfill(5)
     out_rt = bin(register.index(rt))[2:].zfill(5)
-
     findLine = find_label(label, line)
+    print(findLine)
 
-    offset = bin(findLine)[2:].zfill(16)
+    if findLine < 0:
+        # offset = bin(findLine)[3:]
+        # #print(offset)
+        # offset2 = offset.translate(offset.maketrans("10","01"))
+        # #print(offset2)
+        # offset = int(offset, 2)
+        # #print(offset)
+        # offset2 = int(offset2, 2)
+        # #print(offset2)
+        #
+        # offset = offset - offset2
+        # #print(offset)
+        # if offset < 0: offset *= -1
+        #
+        # offset = str(bin(offset))
+        # offset2 = str(bin(offset2))
+        #
+        # offset = offset[2:].rjust(16, offset[0])
+
+        offset = two_complement(int(findLine), 16)
+        print(offset)
+        offset = bin(offset)[3:]
+
+        print(offset)
+    else:
+        offset = bin(findLine)[2:].zfill(16)
 
     outBin = instruction + out_rs + out_rt + offset
     #print(outBin)
