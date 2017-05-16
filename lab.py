@@ -1,32 +1,29 @@
-def two_complements(binario):
-    print("Numero que estou usando: " + binario)
-    trigger = 0
-    out = ""
-    array = [None] * len(binario)
+fileIn = open("teste.asm", "r")
 
-    for x in range(0, len(binario)):
-        array[x] = binario[x]
+file = fileIn.readlines()
+for item in range(0, len(file) - 1):
+    if item >= len(file): break
+    if ".text" in file[item]: file.pop(item)
+    if ".globl" in file[item]:file.pop(item)
+    if "main:" in file[item]: file.pop(item)
 
-    print("len binario: " + str(len(binario)))
-    print("len array: " + str(len(array)))
+for xline in file:
+    if xline == '\n': file.remove(xline)
 
-    print(array[0])
-    for i in range(len(array)-1, -1, -1):
-        if trigger == 1:
-            if array[i] == "1":
-                array[i] = "0"
-            else:
-                array[i] = "1"
 
-        if array[i] == "1":
-            trigger = 1
+def find_label(label, currentLine):
 
-    for j in range(0, len(array)):
-        out = out + array[j]
+    #file.index(label)
 
-    return out
+    none_ins = 0
+    for i in file:
+        if i != '\n':
+            instruction = i.split()
+            if len(instruction) == 1: none_ins += 1
 
-num = bin(-11)[3:].zfill(16)
-x = two_complements(num)
-print(x)
-print(len(x))
+            if label in instruction[0]:
+                none_ins -= 1
+                out = file.index(i) - currentLine - none_ins - 1
+                if out < 0: return out - 1
+                return out
+
