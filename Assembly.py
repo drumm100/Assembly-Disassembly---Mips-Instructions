@@ -23,3 +23,5 @@ def separaBinario():
 
 def binarioParaInstrucao():
     #le o binario e retorna a instrução    
+
+
