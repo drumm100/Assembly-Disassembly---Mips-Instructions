@@ -17,20 +17,35 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$s2", "$s3", "$s4", "$s5","$s6", "$s7", "$t8", "$t9", "$k0",
             "$k1", "$gp", "$sp", "$fp", "$ra"]
 
-def two_complements(string):
-    enter = True
-    length = len(string)
-    for i in range(0, length-1):
-        if string[length-i] == "1" and enter:
-            enter = False
-            for j in range(0, length - i -1):
-                if string[j] == "1":
-                    string[j] = "0"
-                else:
-                    string[j] = "1"
 
-    return string
 
+def two_complements(binario):
+    print("Numero que estou usando: " + binario)
+    trigger = 0
+    out = ""
+    array = [None] * len(binario)
+
+    for x in range(0, len(binario)):
+        array[x] = binario[x]
+
+    print("len binario: " + str(len(binario)))
+    print("len array: " + str(len(array)))
+
+    print(array[0])
+    for i in range(len(array)-1, -1, -1):
+        if trigger == 1:
+            if array[i] == "1":
+                array[i] = "0"
+            else:
+                array[i] = "1"
+
+        if array[i] == "1":
+            trigger = 1
+
+    for j in range(0, len(array)):
+        out = out + array[j]
+
+    return out
 
 def find_label(label, currentLine):
     none_ins = 0
@@ -41,8 +56,7 @@ def find_label(label, currentLine):
 
             if label in instruction[0]:
                 none_ins -= 1
-                out = file.index(i) - currentLine - none_ins
-                if out < 0: return out -1
+                out = file.index(i) - currentLine - none_ins - 1
                 return out
 
 
@@ -114,45 +128,26 @@ def decode_branch(ins, rs, rt, label, line):
     print(findLine)
 
     if findLine < 0:
-        # offset = bin(findLine)[3:]
-        # print(offset)
-        # offset2 = offset.translate(offset.maketrans("10","01"))
-        # print(offset2)
-        # offset = int(offset, 2)
-        # print(offset)
-        # offset2 = int(offset2, 2)
-        # print(offset2)
-        #
-        # offset = bin(offset2  + 1)
-        # print(offset)
-        # #if offset < 0: offset *= -1
-        #
-        # offset = str(bin(offset))
-        # offset2 = str(bin(offset2))
 
         aux = bin(findLine)[3:].zfill(16)
         offset = two_complements(aux)
-
-
-        #offset = offset[2:].rjust(16, offset[0])
-
-
         print(offset)
     else:
         offset = bin(findLine)[2:].zfill(16)
 
     outBin = instruction + out_rs + out_rt + offset
-    #print(outBin)
+    print(outBin)
+    print(len(outBin))
     output = "0x"
 
     for i in range(0, len(outBin) - 3, 4 ):
         aux = outBin[i : i+4]
-        #print(aux)
+        print(aux)
         aux = int(aux, 2)
         aux = hex(aux)[2:]
-        #print(aux)
+        print(aux)
         output = output + aux
-        #print(aux)
+        print(aux)
 
     fileOut.write(output+'\n')
 
