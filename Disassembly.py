@@ -52,12 +52,15 @@ def find_label(label, currentLine):
 
     label = label+':\n'
     print(label)
-    for i in range( currentLine+1, file.index(label) ):
+    if currentLine > file.index(label): it = -1
+    else: it = 1
+
+    for i in range( currentLine+1, file.index(label), it ):
         aux = file[i].split()
         if len(aux) == 1: none_ins += 1
 
     out = file.index(label) - (currentLine + 1)
-    if out < 0: out += none_ins
+    if out < 0: out += none_ins + 1
     else: out -= none_ins
 
     return out
