@@ -4,12 +4,10 @@ fileIn = open("teste.asm", "r")
 fileOut = open("teste.txt", "w")
 
 functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2 } # Codigo de cada funcao na ULA
-#imm funcions: addiu, xori, lui, sltiu, andi,   
-#offset: beq, bne, lw, sw
-#target: j
 type_r = { 'addu':0, 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 } # Instrucoes do tipo R
-type_i = {'addiu':9, "xori":14, "lui":15, "sltiu":11, "andi":12, "lw":35, "sw":43} # Instrucoes do tipo I
+type_i = {'addiu':9, "xori":14, "sltiu":11, "andi":12} # Instrucoes do tipo I
 type_i_branch = {"bne":5, "beq":4}
+type_i_save_load_lui = {"lw":35, "sw":43, "lui":15}
 type_j = {"j":2} #Instrucoes do tipo J
 
 register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
@@ -20,7 +18,7 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
 
 
 def two_complements(binario):
-    print("Numero que estou usando: " + binario)
+    #print("Numero que estou usando: " + binario)
     trigger = 0
     out = ""
     array = [None] * len(binario)
@@ -28,10 +26,10 @@ def two_complements(binario):
     for x in range(0, len(binario)):
         array[x] = binario[x]
 
-    print("len binario: " + str(len(binario)))
-    print("len array: " + str(len(array)))
+    #print("len binario: " + str(len(binario)))
+    #print("len array: " + str(len(array)))
 
-    print(array[0])
+    #print(array[0])
     for i in range(len(array)-1, -1, -1):
         if trigger == 1:
             if array[i] == "1":
@@ -51,7 +49,7 @@ def find_label(label, currentLine):
     none_ins = 0
 
     label = label+':\n'
-    print(label)
+    #print(label)
     if currentLine > file.index(label): it = -1
     else: it = 1
 
@@ -64,7 +62,6 @@ def find_label(label, currentLine):
     else: out -= none_ins
 
     return out
-
 
 def decode_r(ins, rd, rs, rt):
     shamt = '0'
@@ -102,26 +99,70 @@ def decode_r(ins, rd, rs, rt):
 
     fileOut.write(output+'\n')
 
+def decode_i(ins, r1, r2, im):
+    im = int(im)
+    instruction = bin(type_i[ins])[2:].zfill(6)
 
-# def decode_i(ins, r1, r2, im, line):
-#     if ins == "addiu" or ins == "xori" or ins == "sltiu" or ins == "andi":
-#         instruction = bin(type_r[ins])[2:].zfill(6)
-#
-#         out_r2 = bin(register.index(r2))[2:].zfill(5)
-#         out_r1 = bin(register.index(r1))[2:].zfill(5)
-#         imm =
-#
-#         outBin = instruction + out_r2 + out_r1 + imm
+    out_r2 = bin(register.index(r2))[2:].zfill(5)
+    out_r1 = bin(register.index(r1))[2:].zfill(5)
+    if im < 0:
+        im = two_complements(bin(im)[2:].zfill(16))
+    else:
+        im = bin(im)[2:].zfill(16)
 
+    outBin = instruction + out_r2 + out_r1 + im
 
-    # addiu r1, r2, im | opcode(6) ; r2 ; r1 ; imm(16)
-    # xori r1, r2, im  | opcode(6) ; r2 ; r1 ; imm(16)
-    # lui r1, r2       | opcode(6) ; 0 ; r1 ; r2(16)       --- caso especial
-    # sltiu r1, r2, imm | opcode(6) ; r2 ; r1 ; im(16)
-    # andi r1, r2, imm | opcode(6) ; r2 ; r1 ; im(16)
-    # lw r1, imm       | opcode(6) ; r1 ; r2 ; imm(16)    --- caso especial
-    # sw r1, imm       | opcode(6) ; r1 ; r2 ; imm(16)    --- caso especial
+    #print(outBin)
+    output = "0x"
 
+    for i in range(0, len(outBin) - 3, 4):
+        aux = outBin[i: i + 4]
+        # print(aux)
+        aux = int(aux, 2)
+        aux = hex(aux)[2:]
+        # print(aux)
+        output = output + aux
+        # print(aux)
+
+    fileOut.write(output + '\n')
+
+def decode_save_load_lui(ins, rs, im):
+    instruction = bin(type_i_save_load_lui[ins])[2:].zfill(6)
+    out_rs = bin(register.index(rs))[2:].zfill(5)
+    out_rt = "00000"
+
+    if ins != "lui":
+        aux = im.split("(")
+        aux[1] = aux[1].strip(")")
+        im = int(aux[0])
+
+        out_rt = bin(register.index(aux[1]))[2:].zfill(5)
+
+        if im < 0:
+            im = two_complements(bin(im)[2:].zfill(16))
+        else:
+            im = bin(im)[2:].zfill(16)
+
+    else:
+        #print(im)
+        im = bin( int(im[2:], 16) )[2:].zfill(16)
+
+    #print(im)
+    outBin = instruction + out_rt + out_rs + im
+
+    #print(outBin)
+    output = "0x"
+
+    for i in range(0, len(outBin) - 3, 4):
+        aux = outBin[i: i + 4]
+        # print(aux)
+        aux = int(aux, 2)
+        aux = hex(aux)[2:]
+        # print(aux)
+        output = output + aux
+        # print(aux)
+
+    fileOut.write(output + '\n')
 
 def decode_branch(ins, rs, rt, label, line):
     #print(line)
@@ -131,32 +172,60 @@ def decode_branch(ins, rs, rt, label, line):
     out_rs = bin(register.index(rs))[2:].zfill(5)
     out_rt = bin(register.index(rt))[2:].zfill(5)
     findLine = find_label(label, line)
-    print(findLine)
+    #print(findLine)
 
     if findLine < 0:
 
         aux = bin(findLine)[3:].zfill(16)
         offset = two_complements(aux)
-        print(offset)
+        #print(offset)
     else:
         offset = bin(findLine)[2:].zfill(16)
 
     outBin = instruction + out_rs + out_rt + offset
-    print(outBin)
-    print(len(outBin))
+    #print(outBin)
+    #print(len(outBin))
     output = "0x"
 
     for i in range(0, len(outBin) - 3, 4 ):
         aux = outBin[i : i+4]
-        print(aux)
+        #print(aux)
         aux = int(aux, 2)
         aux = hex(aux)[2:]
-        print(aux)
+        #print(aux)
         output = output + aux
-        print(aux)
+        #print(aux)
 
     fileOut.write(output+'\n')
 
+def decode_jump(ins, label):
+    mem_pos = "0x00400000"
+
+    print("Fazer " + ins +" para o label: " + label)
+    instruction = bin(type_j[ins])[2:].zfill(6)
+    print(find_label(label, 0))
+    cont = find_label(label, 0)
+    #im = (int(hex(4*cont)[2:]) + int(mem_pos[2:]))
+    #print("Valor atual: " + str(im) )
+    im = int(str(cont), 16)
+    im = bin(im)[2:].zfill(26)
+    print(im)
+
+    outBin = instruction + im
+    #print(outBin)
+    print(len(outBin))
+    output = "0x"
+
+    for i in range(0, len(outBin) - 3, 4):
+        aux = outBin[i: i + 4]
+        # print(aux)
+        aux = int(aux, 2)
+        aux = hex(aux)[2:]
+        # print(aux)
+        output = output + aux
+        # print(aux)
+
+    fileOut.write(output + '\n')
 
 file = fileIn.readlines()
 for item in range(0, len(file) - 1):
@@ -170,7 +239,7 @@ while i < len(file):
         i -= 1
         file.remove(file[i+1])
     i += 1
-print(file)
+#print(file)
 
 for line in file:
     if line != '\n':
@@ -183,6 +252,12 @@ for line in file:
             decode_r(instruction[0], instruction[1], instruction[2], instruction[3])
         if instruction[0] in type_i_branch:
             decode_branch(instruction[0], instruction[1], instruction[2], instruction[3], file.index(line))
+        if instruction[0] in type_i:
+            decode_i(instruction[0], instruction[1], instruction[2], instruction[3])
+        if instruction[0] in type_i_save_load_lui:
+            decode_save_load_lui(instruction[0], instruction[1], instruction[2])
+        if instruction[0] in type_j:
+            decode_jump(instruction[0], instruction[1])
 
 
 fileIn.close()
