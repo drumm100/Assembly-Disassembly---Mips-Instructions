@@ -163,11 +163,13 @@ for item in range(0, len(file) - 1):
     if item >= len(file): break
     if ".text" in file[item]: file.pop(item)
     if ".globl" in file[item]:file.pop(item)
-    #if "main:" in file[item]: file.pop(item)
 
-for xline in file:
-    if xline == '\n': file.remove(xline)
-
+i = 0
+while i < len(file):
+    if file[i] == '\n':
+        i -= 1
+        file.remove(file[i+1])
+    i += 1
 print(file)
 
 for line in file:

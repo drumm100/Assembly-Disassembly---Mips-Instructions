@@ -27,6 +27,7 @@ label:
  	slt $t1, $t2, $t3
  	subu $t7, $t6, $t4
 
+
 volta:
 	sll $t1, $t2, 4
 	slt $t1, $t2, $t3
