@@ -6,6 +6,8 @@ loop:
 	addu $t1, $t2, $s3
 
 main:
+	j main
+	j volta
 	lui $t1, 0x0123
 	lw $t1, -10($t2)
 	sw $t1, -10($t2)
@@ -25,7 +27,6 @@ main:
 	srl $t0, $t1, 4
 	srl $t0, $t1, 4
 	bne $t0, $t6, denovo
-	j main
 
 denovo:
 	sub $t1, $s3, $s4

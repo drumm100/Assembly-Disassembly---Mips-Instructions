@@ -199,31 +199,23 @@ def decode_branch(ins, rs, rt, label, line):
     fileOut.write(output+'\n')
 
 def decode_jump(ins, label):
-    mem_pos = "0x00400000"
+    memory_program_start = 4194304
 
-    print("Fazer " + ins +" para o label: " + label)
     instruction = bin(type_j[ins])[2:].zfill(6)
-    print(find_label(label, 0))
-    cont = find_label(label, 0)
-    #im = (int(hex(4*cont)[2:]) + int(mem_pos[2:]))
-    #print("Valor atual: " + str(im) )
-    im = int(str(cont), 16)
-    im = bin(im)[2:].zfill(26)
-    print(im)
+    number_instruction = 4 * find_label(label, 0)
+
+    im = bin(number_instruction + memory_program_start)[2:].zfill(32)
+    im = im[4:]
+    im = im[0:len(im)-2]
 
     outBin = instruction + im
-    #print(outBin)
-    print(len(outBin))
     output = "0x"
 
     for i in range(0, len(outBin) - 3, 4):
         aux = outBin[i: i + 4]
-        # print(aux)
         aux = int(aux, 2)
         aux = hex(aux)[2:]
-        # print(aux)
         output = output + aux
-        # print(aux)
 
     fileOut.write(output + '\n')
 
