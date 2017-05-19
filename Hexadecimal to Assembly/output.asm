@@ -1,1 +1,4 @@
+.text
+.globl  main
 
+main:
