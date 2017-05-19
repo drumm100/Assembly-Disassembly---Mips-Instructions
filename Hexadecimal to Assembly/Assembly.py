@@ -1,6 +1,6 @@
 # Arquivo que gera o código em assembly apartir da decodificação em hexadecimal
 
-fileIn = open("teste.txt", "r")
+fileIn = open("input.txt", "r")
 # coisa.fill
 
 
@@ -10,7 +10,7 @@ vetor = aux.split('x')
 vetor = vetor[0] #vetor agora possui binario
 
 
-fileOut = open("teste.asm", "w")
+fileOut = open("output.asm", "w")
 
 
 

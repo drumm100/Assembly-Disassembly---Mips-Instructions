@@ -2,8 +2,8 @@
 Program that generates code in hexadecimal from code in assembly
 """
 
-fileIn = open("teste.asm", "r")
-fileOut = open("teste.txt", "w")
+fileIn = open("input.asm", "r")
+fileOut = open("output.txt", "w")
 
 functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2 }
 type_r = { 'addu':0, 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 }
