@@ -2,7 +2,7 @@
 Program that generates code in assembly language from code in hexadecimal
 """
 
-input = open("input.txt", "r")
+input = open("Input.txt", "r")
 output = open("output.asm", "w")
 
 functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2 }
@@ -17,32 +17,34 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$k1", "$gp", "$sp", "$fp", "$ra"]
 
 file_out = [".text\n", ".globl  main\n\n", "main:\n"]
-# coisa.fill
-
-
-
-# aux = hex(input)
-# vetor = aux.split('x')
-# vetor = vetor[0] #vetor agora possui binario
 
 
 def print_file():
     for line in file_out:
         output.write(line)
 
-def converteBinario(decimal):
-    output = ""
-    #converte binarios com numero de bits adequados
+def converteBinario(hexadecimal):
+    output = "" #binario final
 
-    for i in range(0, len(decimal) - 1):
-        aux = decimal[i]
+    #converte binarios com numero de bits adequados
+    
+    aux = hexadecimal.split('x')
+    hexadecimal = aux[1] #(014b482a)
+    
+    for i in range(0, len(hexadecimal) - 1):
+
+        aux = hexadecimal[i]  # i=0, aux = 0
         aux = bin( int(aux, 16) )[2:].zfill(4)
         output = output + aux
 
     return output
 
 
-def separaBinario():
+def separaBinario(binario):
+    #separa o todo para cada instrução
+
+
+
     return 0
     #separa o todo para cada instrução
 
@@ -54,9 +56,9 @@ def binarioParaInstrucao():
 file = input.readlines()
 
 for line in file:
-    line = line[2:]
+    #line = line[2:]
     line = converteBinario(line)
-    line = int(line[6:], 2)
+    #line = int(line[6:], 2)
     print(line)
 
     if int(line) == 0:
