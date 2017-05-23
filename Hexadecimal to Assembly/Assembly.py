@@ -41,6 +41,13 @@ def converteBinario(hexadecimal):
 
 
 def separaBinario(binario):
+    opcode_binario = binario[:6]
+    opcode_decimal = int(opcode_binario,2)
+
+    f
+
+
+
     #separa o todo para cada instrução
 
 
