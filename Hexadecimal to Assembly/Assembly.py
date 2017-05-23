@@ -5,12 +5,11 @@ Program that generates code in assembly language from code in hexadecimal
 input = open("Input.txt", "r")
 output = open("output.asm", "w")
 
-functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2 }
-type_r = { 'addu':0, 'subu':0, 'sub':0, 'or':0, 'slt':0, 'sll':0, 'srl':0 }
-type_i = {'addiu':9, "xori":14, "sltiu":11, "andi":12}
-type_i_branch = {"bne":5, "beq":4}
-type_i_save_load_lui = {"lw":35, "sw":43, "lui":15}
-type_j = {"j":2}
+functions = {34:'sub', 37:'or', 33:'addu', 35:'subu', 42:'slt', 0:'sll', 2:'srl' }
+type_i = {9:'addiu', 14:"xori", 11:"sltiu", 12:"andi"}
+type_i_branch = {5:"bne", 4:"beq"}
+type_i_save_load_lui = {35:"lw", 43:"sw", 15:"lui"}
+type_j = {2:"j"}
 register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$s0", "$s1",
             "$s2", "$s3", "$s4", "$s5","$s6", "$s7", "$t8", "$t9", "$k0",
