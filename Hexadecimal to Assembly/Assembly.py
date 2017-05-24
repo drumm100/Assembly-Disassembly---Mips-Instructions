@@ -13,7 +13,7 @@ type_j = {2:"j"}
 register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$t1", "$t2", "$t3", "$t4", "$t5", "$t6", "$t7", "$s0", "$s1",
             "$s2", "$s3", "$s4", "$s5","$s6", "$s7", "$t8", "$t9", "$k0",
-            "$k1", "$gp", "$sp", "$fp", "$ra"]
+            "$k1", "$gp", "$sp", "$fp", "$ra"] #ordenado
 
 file_out = [".text\n", ".globl  main\n\n", "main:\n"]
 
@@ -23,6 +23,7 @@ def print_file():
         output.write(line)
 
 def converteBinario(hexadecimal):
+
     output = "" #binario final
 
     #converte binarios com numero de bits adequados
@@ -39,38 +40,42 @@ def converteBinario(hexadecimal):
     return output
 
 
-def separaBinario(binario):
-    opcode_binario = binario[:6]
-    opcode_decimal = int(opcode_binario,2)
+def decode_r(binary):
+    #000000|01010|01011|01001|00000|101010 sem shift
 
-    f
+    #000000|00000|01001|01000|00100|000010 com shift
 
+    func = int(binary[26:], 2) #->[2]
+    func = functions[func]     #->[srl]
 
+    rs = int(binary[6:11],2)
+    rs = register[rs]
 
-    #separa o todo para cada instrução
+    rt = int(binary[11:16],2)
+    rt = register[rt]
 
+    rd = int(binary[16:21],2)
+    rd = register[rd]
 
+    shamt = int(binary[21:26],2)
+    shamt = register[shamt]
 
-    return 0
-    #separa o todo para cada instrução
+    if shamt != 0:
+        aux = rt
+        rt = shamt
+        rs = aux
 
-def binarioParaInstrucao():
-    return 0
-    #le o binario e retorna a instrução    
+    out = '\t' +func+', '+rd+', '+rs+', '+rt+'\n'     
+    file_out.append(out)
+    return out
 
-
+'''------------------------------------------------'''
 file = input.readlines()
-
 for line in file:
-    #line = line[2:]
     line = converteBinario(line)
-    #line = int(line[6:], 2)
     print(line)
-
-    if int(line) == 0:
-        print_file("Achei uma instrução da ULA, teste")
-
-
+    if int(line[0:6],2) == 0: #verificando se é tipo 5
+        print (decode_r(line))
 
 print_file()
 
