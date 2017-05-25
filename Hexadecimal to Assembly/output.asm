@@ -2,9 +2,11 @@
 .globl  main
 
 main:
-	slt, $t1, $t3, $zero
-	addu, $t1, $s3, $zero
-	sub, $t1, $s4, $zero
-	or, $t0, $t2, $zero
-	srl, $t0, $t1, $a0
-	srl, $t0, $t1, $a0
+	lui, $t1, 0x123
+	lw, $t1, -10($t2)
+	sw, $t1, -10($t2)
+	addiu, $t3, $t9, -4
+	xori, $s1, $s4, 5
+	andi, $t3, $t0, 9
+	sltiu, $a1, $a3, 6
+	slt, $t1, $t2, $t3

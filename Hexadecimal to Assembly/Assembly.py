@@ -18,6 +18,31 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
 file_out = [".text\n", ".globl  main\n\n", "main:\n"]
 
 
+def two_complements(binario):
+    trigger = 0
+    out = ""
+    array = [None] * len(binario)
+
+
+    for x in range(0, len(binario)):
+        array[x] = binario[x]
+
+    for i in range(len(array)-1, -1, -1):
+        if trigger == 1:
+            if array[i] == "1":
+                array[i] = "0"
+            else:
+                array[i] = "1"
+
+        if array[i] == "1":
+            trigger = 1
+
+    for j in range(0, len(array)):
+        out = out + array[j]
+
+    out = (-1)*int(out,2)
+    return out
+   
 def print_file():
     for line in file_out:
         output.write(line)
@@ -58,24 +83,100 @@ def decode_r(binary):
     rd = register[rd]
 
     shamt = int(binary[21:26],2)
-    shamt = register[shamt]
 
     if shamt != 0:
         aux = rt
         rt = shamt
         rs = aux
-
-    out = '\t' +func+', '+rd+', '+rs+', '+rt+'\n'     
+    
+    out = '\t' +func+', '+rd+', '+rs+', '+str(rt)+'\n'     
     file_out.append(out)
     return out
 
+
+def decode_i(binary):
+    
+    opcode = int(binary[0:6],2)
+
+    if opcode in type_i:
+        #xori $s1, $s4, 5
+        #001110|10100|10001|0000000000000101
+        opcode = type_i[opcode]
+
+        rs = int(binary[6:11],2)
+        rs = register[rs]
+
+        rt = int(binary[11:16],2)
+        rt = register[rt]
+
+        if binary[16] == '1':
+            imm = two_complements(binary[16:])
+        else:    
+            imm = int(binary[16:],2)
+
+        out = '\t' +opcode+', '+rt+', '+rs+', '+str(imm)+'\n'
+
+        file_out.append(out)
+
+
+    if opcode in type_i_branch:
+        opcode = type_i_branch[opcode]
+
+        #FAZER
+
+
+    if opcode in type_i_save_load_lui:
+        #lui $t1, 0x0123
+        #001111|00000|01001|0000000100100011
+        opcode = type_i_save_load_lui[opcode]
+
+        if opcode is 'lui':
+            
+            rt = int(binary[11:16],2)
+            rt = register[rt]
+
+            imm = hex(int(binary[16:],2))
+
+            out = '\t' +opcode+', '+rt+', '+str(imm)+'\n'
+
+            file_out.append(out)
+
+        else:
+        #sw $t1, -10($t2)
+        #10101101010010011111111111110110
+
+            rs = int(binary[6:11],2)
+            rs = register[rs]
+
+            rt = int(binary[11:16],2)
+            rt = register[rt]
+
+            if binary[16] == '1':
+                imm = two_complements(binary[16:])
+            else:    
+                imm = int(binary[16:],2)
+               
+            out = '\t' +opcode+', '+rt+', '+str(imm)+'('+rs+')'+'\n'
+
+            file_out.append(out)
+
+
+
+
+    
+
+    return out
+
 '''------------------------------------------------'''
+
 file = input.readlines()
 for line in file:
     line = converteBinario(line)
     print(line)
-    if int(line[0:6],2) == 0: #verificando se é tipo 5
+    if int(line[0:6],2) == 0: 
         print (decode_r(line))
+    if int(line[0:6],2) != 0 and int(line[0:6],2) != 2:
+        print (decode_i(line))
 
 print_file()
 
