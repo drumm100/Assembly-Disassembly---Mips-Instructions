@@ -2,9 +2,30 @@
 .globl  main
 
 main:
-	slt, $t1, $t3, $zero
-	addu, $t1, $s3, $zero
-	sub, $t1, $s4, $zero
-	or, $t0, $t2, $zero
-	srl, $t0, $t1, $a0
-	srl, $t0, $t1, $a0
+	slt, $t1, $t2, $t3
+	addu, $t1, $t2, $s3
+	lui, $t1, 0x123
+	lw, $t1, -10($t2)
+	sw, $t1, -10($t2)
+	addiu, $t3, $t9, -4
+	xori, $s1, $s4, 5
+	andi, $t3, $t0, 9
+	sub, $t1, $s3, $s4
+	sltiu, $a1, $a3, 6
+	or, $t0, $t1, $t2
+	sll, $t1, $t2, 4
+	beq, $t1, $t2, label, 12
+	slt, $t1, $t2, $t3
+	beq, $t5, $t8, label3, 8
+	addu, $t1, $t2, $s3
+	subu, $t7, $t6, $t4
+	beq, $t7, $t6, label2, -20
+	srl, $t0, $t1, 4
+	srl, $t0, $t1, 4
+	bne, $t0, $t6, label, 0
+	sub, $t1, $s3, $s4
+	or, $t0, $t1, $t2
+	slt, $t1, $t2, $t3
+	subu, $t7, $t6, $t4
+	sll, $t1, $t2, 4
+	slt, $t1, $t2, $t3
