@@ -2,7 +2,7 @@
 Program that generates code in hexadecimal from code in assembly
 """
 
-fileIn = open("inputR.asm", "r")
+fileIn = open("input.asm", "r")
 fileOut = open("output.txt", "w")
 
 functions = {'sub':34, 'or':37, 'addu':33, 'subu':35, 'slt':42, 'sll':0, 'srl':2 }
