@@ -18,10 +18,9 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$k1", "$gp", "$sp", "$fp", "$ra"]
 
 words = ['label', 'label2', 'label3', 'label4', 'label5', 'loop', 'volta', 'denovo', 'vuelta']
-
-
+labels = {}
+###### tamanho do arquivo | imm
 file_out = [".text\n", ".globl  main\n\n", "main:\n"]
-
 
 def two_complements(binario):
     trigger = 0
@@ -69,6 +68,19 @@ def converteBinario(hexadecimal):
 
     return output
 
+def already_value(val):
+    aux = 0
+    for item in labels:
+        if labels.get(item) == val:
+            aux += 1
+    return aux > 1
+
+def print_labels():
+    for dic in labels:
+        #aux = labels.get(dic, "nao achei")
+        #boolean = already_value(aux)
+        #if not(boolean):
+        file_out.insert(labels[dic], "\n"+dic+"\n")
 
 def decode_r(binary):
     #000000|01010|01011|01001|00000|101010 sem shift
@@ -141,10 +153,11 @@ def decode_i(binary):
         else:
             imm = int(binary[16:], 2)
 
-        out = '\t' + opcode + ', ' + rs + ', ' + rt + ', '+ random.choice(words) + ', ' + str(imm) + '\n'
+        label = random.choice(words)
+        out = '\t' + opcode + ', ' + rs + ', ' + rt + ', '+ label + ', ' + str(imm) + '\n'
 
         file_out.append(out)
-
+        labels[label] = len(file_out) + imm
 
     if opcode in type_i_save_load_lui:
         #lui $t1, 0x0123
@@ -215,9 +228,8 @@ for line in file:
     if int(line[0:6], 2) == 2:
         print('j')
 
-
+print_labels()
 print_file()
 
-
-input.close()
 output.close()
+input.close()
