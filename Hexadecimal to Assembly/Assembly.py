@@ -21,6 +21,7 @@ labels = collections.OrderedDict()
 
 file_out = [".text\n", ".globl  main\n\n", "main:\n"]
 
+""" Auxiliar Functions """
 def two_complements(binario):
     trigger = 0
     out = ""
@@ -77,6 +78,8 @@ def print_labels():
     for dic in labels:
         file_out.insert(labels[dic] + 1, "\n"+dic+"\n")
 
+
+""" Decode Functions """
 def decode_r(binary):
     #000000|01010|01011|01001|00000|101010 sem shift
 
@@ -104,7 +107,6 @@ def decode_r(binary):
     out = '\t' +func+rd+', '+rs+', '+str(rt)+'\n'
     file_out.append(out)
     return out
-
 
 def decode_i(binary):
     
@@ -200,7 +202,6 @@ def decode_i(binary):
     
 
     return out
-
 
 def decode_j(binary):
 #000010|00000100000000000000011011
