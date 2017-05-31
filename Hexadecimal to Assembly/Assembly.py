@@ -1,8 +1,7 @@
 """
 Program that generates code in assembly language from code in hexadecimal
 """
-import random
-
+import collections
 
 input = open("Input.txt", "r")
 output = open("output.asm", "w")
@@ -18,7 +17,7 @@ register = ["$zero", "$at", "$v0", "$v1", "$a0", "$a1", "$a2", "$a3", "$t0",
             "$k1", "$gp", "$sp", "$fp", "$ra"]
 
 words = ['label', 'label2', 'label3', 'label4', 'label5', 'loop', 'volta', 'denovo', 'vuelta']
-labels = {}
+labels = collections.OrderedDict()
 
 file_out = [".text\n", ".globl  main\n\n", "main:\n"]
 
@@ -102,7 +101,7 @@ def decode_r(binary):
         rt = shamt
         rs = aux
     
-    out = '\t' +func+', '+rd+', '+rs+', '+str(rt)+'\n'     
+    out = '\t' +func+rd+', '+rs+', '+str(rt)+'\n'
     file_out.append(out)
     return out
 
@@ -127,7 +126,7 @@ def decode_i(binary):
         else:    
             imm = int(binary[16:],2)
 
-        out = '\t' +opcode+', '+rt+', '+rs+', '+str(imm)+'\n'
+        out = '\t' +opcode+rt+', '+rs+', '+str(imm)+'\n'
 
         file_out.append(out)
 
@@ -153,10 +152,10 @@ def decode_i(binary):
         if boolean:
             label = value
         else:
-            label = random.choice(words)
+            label = 'label_' + str(imm)
             labels[label] = len(file_out) + imm
 
-        out = '\t' + opcode + ', ' + rs + ', ' + rt + ', '+ label + ', ' + str(imm) + '\n'
+        out = '\t' + opcode + rs + ', ' + rt + ', '+ label + '\n'
 
         file_out.append(out)
 
@@ -172,7 +171,7 @@ def decode_i(binary):
 
             imm = hex(int(binary[16:],2))
 
-            out = '\t' +opcode+', '+rt+', '+str(imm)+'\n'
+            out = '\t' +opcode+rt+', '+str(imm)+'\n'
 
             file_out.append(out)
 
@@ -191,7 +190,7 @@ def decode_i(binary):
             else:    
                 imm = int(binary[16:],2)
                
-            out = '\t' +opcode+', '+rt+', '+str(imm)+'('+rs+')'+'\n'
+            out = '\t' +opcode+rt+', '+str(imm)+'('+rs+')'+'\n'
 
             file_out.append(out)
 
@@ -209,10 +208,24 @@ def decode_j(binary):
     address = binary[6:]
     address = '0000'+address+'00'
     valor = int(address[15:],2)
-    valor = valor/4
+    valor = int(valor/4)
 
-    out = '\t' + 'j ' + str(valor) + '\n'
-    file_out.append(out)
+    if valor == 0:
+        out = '\tj main\n'
+        file_out.append(out)
+
+    else:
+        boolean, value = already_value(valor-2)
+        if boolean:
+            label = value
+        else:
+            label = 'label_' + str(valor)
+            labels[label] = len(file_out) + valor -2
+
+
+
+        out = '\t' + 'j ' + label + '\n'
+        file_out.append(out)
 
 ####################################################################################
 
@@ -232,6 +245,8 @@ for line in file:
 
 print_labels()
 print_file()
+
+print(labels)
 
 output.close()
 input.close()
