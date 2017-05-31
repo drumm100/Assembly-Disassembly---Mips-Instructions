@@ -204,13 +204,14 @@ def decode_i(binary):
 
 def decode_j(binary):
 #000010|00000100000000000000011011
-    addressSignal = binary[6]
 
-    if addressSignal == '0':
-        address = int(binary[6:], 2)
-    elif addressSignal == '1':
-        address = two_complements(binary[6:])
+    address = binary[6:]
+    address = '0000'+address+'00'
+    valor = int(address[15:],2)
+    valor = valor/4
 
+    out = '\t' + 'j ' + str(valor) + '\n'
+    file_out.append(out)
 
 ####################################################################################
 
@@ -226,7 +227,7 @@ for line in file:
         print (decode_i(line))
 
     if int(line[0:6], 2) == 2:
-        print('j')
+        print(decode_j(line))
 
 print_labels()
 print_file()
