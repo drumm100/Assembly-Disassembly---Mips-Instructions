@@ -2,6 +2,8 @@
 .globl  main
 
 main:
+	j main
+	j volta
 	lui $t1, 0x0123
 	lw $t1, -10($t2)
 	sw $t1, -10($t2)
